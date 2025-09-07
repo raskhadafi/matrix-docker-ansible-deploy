@@ -1,0 +1,72 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+{
+	"name": "Matrix Docker Ansible Deploy",
+	"image": "docker.io/ubuntu:plucky-20250730",
+	"features": {
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"configureZshAsDefaultShell": true,
+			"username": "ubuntu",
+			"upgradePackages": "true"
+		},
+		"ghcr.io/stuartleeks/dev-container-features/shell-history:0": {},
+		"ghcr.io/devcontainers-extra/features/ansible:2": {
+			"injections": "jmespath"
+		},
+		"ghcr.io/hspaans/devcontainer-features/ansible-lint:2": {},
+    	"ghcr.io/devcontainers-extra/features/direnv:1": {},
+		"ghcr.io/guiyomh/features/just:0": {},
+		"ghcr.io/devcontainers/features/nix:1": {
+			"extraNixConfig": "experimental-features = nix-command flakes"
+		},
+		"ghcr.io/devcontainers-extra/features/apt-packages:1": {
+				"packages": "curl,tig,telnet,htop,pipx,vim,dnsutils"
+		},
+		"ghcr.io/devcontainers-extra/features/zsh-plugins:0": {
+			"plugins": "git git-extras",
+			"omzPlugins": "https://github.com/zsh-users/zsh-autosuggestions.git https://github.com/zsh-users/zsh-syntax-highlighting.git"
+		}
+	},
+	"overrideCommand": true,
+	// some base images require a specific user name
+	"containerUser": "ubuntu",
+  "remoteUser": "ubuntu",
+	"runArgs": ["--network=host"],
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "zsh",
+				"terminal.integrated.copyOnSelection": true,
+				"files.trimTrailingWhitespace": true,
+				"files.trimFinalNewlines": true,
+				"files.insertFinalNewline": true,
+				"workbench.welcomePage.walkthroughs.openOnInstall": false,
+				"editor.tabSize": 2
+			},
+			"extensions": [
+				"gruntfuggly.todo-tree",
+				"mutantdino.resourcemonitor",
+				"redhat.vscode-yaml",
+				"patbenatar.advanced-new-file",
+				"ms-azuretools.vscode-docker",
+				"shd101wyy.markdown-preview-enhanced"
+			]
+		}
+	},
+	"hostRequirements": {
+		"cpus": 4
+	},
+	"waitFor": "initializeCommand",
+	"onCreateCommand": "/bin/bash -c .devcontainer/on-create.sh",
+  	"postCreateCommand": "/bin/bash -c .devcontainer/post-create.sh",
+	"mounts": [
+		"source=matrix-docker-ansible-deploy-bashhistory,target=/commandhistory,type=volume",
+		"source=${localWorkspaceFolder},target=/usr/local/matrix-docker-ansible-deploy,type=bind,consistency=cached"
+	],
+	"forwardPorts": [],
+	"containerEnv": {
+		"HOME": "/home/ubuntu",
+		"TZ": "Europe/London",
+		"LC_ALL": "C.UTF-8"
+	}
+}
